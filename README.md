@@ -1,2 +1,0 @@
-# escape.game
-Escape game
