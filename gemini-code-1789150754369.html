@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Escape Game - Le Secret</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: 'Courier New', Courier, monospace;
+      background-color: #121212;
+      color: #e0e0e0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    h1 {
+      margin-bottom: 10px;
+      text-align: center;
+      color: #00ffcc;
+      font-size: 1.8rem;
+    }
+    p.subtitle {
+      margin-bottom: 20px;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #aaa;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      width: 100%;
+      max-width: 400px;
+    }
+    .card {
+      background-color: #1e1e1e;
+      border: 2px solid #00ffcc;
+      border-radius: 8px;
+      aspect-ratio: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #00ffcc;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+      transition: transform 0.2s, background-color 0.2s;
+    }
+    .card:active {
+      transform: scale(0.95);
+    }
+    /* Style de la boîte modale pour afficher les indices */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.85);
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      z-index: 100;
+    }
+    .modal-content {
+      background-color: #222;
+      border: 2px solid #00ffcc;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      max-width: 90%;
+      width: 350px;
+      position: relative;
+    }
+    .modal-content p {
+      font-size: 1.1rem;
+      margin-bottom: 20px;
+    }
+    .modal-content video {
+      width: 100%;
+      border-radius: 5px;
+      margin-bottom: 15px;
+    }
+    .close-btn {
+      background-color: #00ffcc;
+      color: #121212;
+      border: none;
+      padding: 10px 20px;
+      font-weight: bold;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>ESCAPE GAME</h1>
+  <p class="subtitle">Explorez les cases pour débloquer les indices...</p>
+
+  <div class="grid" id="grid"></div>
+
+  <div class="modal" id="modal">
+    <div class="modal-content" id="modal-content">
+      <p id="hint-text"></p>
+      <button class="close-btn" onclick="closeModal()">Fermer</button>
+    </div>
+  </div>
+
+  <script>
+    // Liste des indices pour les 15 cases
+    const hints = [
+      "Indice 1 : Regarde sous la table.",
+      "Indice 2 : Le code commence par un chiffre pair.",
+      "Indice 3 : Cherche la clé dans le livre bleu.",
+      "Indice 4 : N'oublie pas de vérifier derrière l'horloge.",
+      "Indice 5 : La réponse se trouve dans l'ombre.",
+      "Indice 6 : Un symbole est caché sous le tapis.",
+      "Indice 7 : Écoute attentivement le tic-tac.",
+      "Indice 8 : La combinaison contient la couleur rouge.",
+      "Indice 9 : Inverse l'ordre des trois premiers chiffres.",
+      "Indice 10 : Regarde dans le miroir.",
+      "Indice 11 : Le temps presse...",
+      "VIDEO", // Case 12
+      "Indice 13 : Suis la lumière bleue.",
+      "Indice 14 : La fin est plus proche que tu ne le penses.",
+      "Indice 15 : Félicitations, tu as trouvé le dernier indice !"
+    ];
+
+    const grid = document.getElementById('grid');
+    const modal = document.getElementById('modal');
+    const hintText = document.getElementById('hint-text');
+    const modalContent = document.getElementById('modal-content');
+
+    // Génération des 15 cases
+    for (let i = 1; i <= 15; i++) {
+      const card = document.createElement('div');
+      card.classList.add('card');
+      card.innerText = i;
+      card.onclick = () => openCard(i);
+      grid.appendChild(card);
+    }
+
+    function openCard(index) {
+      // Nettoyage de la modale
+      hintText.innerText = "";
+      const existingVideo = modalContent.querySelector('video');
+      if (existingVideo) {
+        existingVideo.remove();
+      }
+
+      if (index === 12) {
+        // Contenu spécifique pour la 12ème case (Vidéo)
+        hintText.innerText = "Voici l'indice ultime :";
+        
+        const video = document.createElement('video');
+        video.src = "20811.mp4"; // Nom de votre fichier vidéo
+        video.controls = true;
+        video.autoplay = true;
+        video.playsInline = true; // Important pour l'affichage fluide sur mobile
+        
+        modalContent.insertBefore(video, modalContent.querySelector('.close-btn'));
+      } else {
+        // Indices classiques
+        hintText.innerText = hints[index - 1];
+      }
+
+      modal.style.display = 'flex';
+    }
+
+    function closeModal() {
+      const video = modalContent.querySelector('video');
+      if (video) {
+        video.pause();
+      }
+      modal.style.display = 'none';
+    }
+  </script>
+</body>
+</html>
